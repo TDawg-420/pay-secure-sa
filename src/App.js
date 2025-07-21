@@ -1,23 +1,22 @@
-import logo from './logo.svg';
+import React from 'react';
 import './App.css';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
+    <div className="app-container">
+      <div className="card">
+        <h1>PaySecureSA</h1>
+        <p className="tagline">Secure International Payments Portal</p>
+        <hr />
+        <p className="info">
+          Welcome to your trusted portal for global transactions.
+          Please register or log in to continue.
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+        <div className="buttons">
+          <button>Register</button>
+          <button className="outline">Login</button>
+        </div>
+      </div>
     </div>
   );
 }
