@@ -1,23 +1,20 @@
 import React from 'react';
-import './App.css';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import HomePage from './pages/HomePage';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import Dashboard from './pages/Dashboard'; // Make sure the path is correct
 
 function App() {
   return (
-    <div className="app-container">
-      <div className="card">
-        <h1>PaySecureSA</h1>
-        <p className="tagline">Secure International Payments Portal</p>
-        <hr />
-        <p className="info">
-          Welcome to your trusted portal for global transactions.
-          Please register or log in to continue.
-        </p>
-        <div className="buttons">
-          <button>Register</button>
-          <button className="outline">Login</button>
-        </div>
-      </div>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/dashboard/:userId/*" element={<Dashboard />} />
+      </Routes>
+    </Router>
   );
 }
 
