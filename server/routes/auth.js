@@ -13,6 +13,12 @@ router.post('/register', async (req, res) => {
             return res.status(400).json({ error: 'All fields are required' });
         }
 
+        // Check if user already exists
+        const [existing] = await db.execute('SELECT id FROM users WHERE email = ?', [email]);
+        if (existing.length > 0) {
+            return res.status(400).json({ error: 'User already exists with this email' });
+        }
+
         // Hash password
         const hash = await bcrypt.hash(password.trim(), 10);
 
@@ -25,7 +31,13 @@ router.post('/register', async (req, res) => {
         return res.status(201).json({ message: 'Registered successfully' });
     } catch (err) {
         console.error('Registration error:', err);
-        return res.status(500).json({ error: 'Server error' });
+
+        // More specific error messages
+        if (err.code === 'ER_DUP_ENTRY') {
+            return res.status(400).json({ error: 'User already exists with this email or account number' });
+        }
+
+        return res.status(500).json({ error: 'Server error: ' + err.message });
     }
 });
 

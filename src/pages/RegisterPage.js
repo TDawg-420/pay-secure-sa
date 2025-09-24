@@ -47,24 +47,23 @@ export default function RegisterPage() {
         setMessage('');
 
         try {
-            const res = await fetch('http://localhost:5000/api/register', {
+            const { fullName, idNumber, accountNumber, email, password } = form;
+
+            const API_URL = process.env.REACT_APP_API_URL || 'https://localhost:5001';
+
+            const res = await fetch(`${API_URL}/api/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    fullName: form.fullName,
-                    idNumber: form.idNumber,
-                    accountNumber: form.accountNumber,
-                    email: form.email,
-                    password: form.password,
-                }),
+                body: JSON.stringify({ fullName, idNumber, accountNumber, email, password }),
             });
 
-            const text = await res.text(); // read response as text first
 
+            // Try to read as JSON first
             let data;
             try {
-                data = JSON.parse(text); // try parsing JSON
+                data = await res.json();
             } catch {
+                const text = await res.text();
                 throw new Error('Invalid server response: ' + text);
             }
 
@@ -80,6 +79,7 @@ export default function RegisterPage() {
                 confirmPassword: '',
             });
         } catch (err) {
+            console.error('Registration error:', err);
             setMessage(`❌ ${err.message}`);
         } finally {
             setSubmitting(false);

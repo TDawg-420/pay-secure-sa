@@ -4,20 +4,36 @@ import '../assets/Dashboard.css';
 import '../assets/forms.css';
 
 const History = () => {
-    const { userId } = useParams(); // get userId from URL
+    const { userId } = useParams();
     const [payments, setPayments] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    const API_URL = process.env.REACT_APP_API_URL || 'https://localhost:5001';
+
     useEffect(() => {
         const fetchHistory = async () => {
+            setLoading(true);
+            setError(null);
+
             try {
-                const res = await fetch(`http://localhost:5000/api/payment/history/${userId}`);
-                if (!res.ok) throw new Error('Failed to fetch payment history');
+                const res = await fetch(`${API_URL}/api/payment/history/${userId}`, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                });
+
+                if (!res.ok) {
+                    const text = await res.text();
+                    let data;
+                    try { data = JSON.parse(text); } catch { data = { error: text }; }
+                    throw new Error(data.error || 'Failed to fetch payment history');
+                }
+
                 const data = await res.json();
                 setPayments(data);
             } catch (err) {
-                console.error(err);
+                console.error('Error fetching user history:', err);
                 setError(err.message);
             } finally {
                 setLoading(false);
@@ -25,13 +41,13 @@ const History = () => {
         };
 
         fetchHistory();
-    }, [userId]);
+    }, [userId, API_URL]);
 
     if (loading) return <p>Loading user payment history...</p>;
-    if (error) return <p>Error: {error}</p>;
+    if (error) return <p style={{ color: 'orange' }}>Error: {error}</p>;
 
     return (
-        <div>
+        <div className="dashboard-history-container">
             <h3>Payment History</h3>
             {payments.length === 0 ? (
                 <p>No payments found.</p>

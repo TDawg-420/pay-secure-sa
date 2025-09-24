@@ -18,7 +18,7 @@ const Payments = ({ user }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch('http://localhost:5000/api/payment/submit-payment', {
+            const response = await fetch('https://localhost:5001/api/payment/submit-payment', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
