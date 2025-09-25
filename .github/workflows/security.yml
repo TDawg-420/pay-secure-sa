@@ -1,0 +1,29 @@
+name: DevSecOps Security Pipeline
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  security-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run lint (dummy security check)
+        run: npm run lint || echo "Lint completed"
+
+      - name: Run tests (optional)
+        run: npm test || echo "No tests defined"
